@@ -3,15 +3,19 @@ import random
 from datetime import datetime
 import os
 
-# Get API credentials from GitHub secrets (environment variables)
+# Get API credentials from environment variables
 api_key = os.environ["API_KEY"]
 api_secret = os.environ["API_SECRET"]
 access_token = os.environ["ACCESS_TOKEN"]
 access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
 
-# Connect to X (Twitter) API
-auth = tweepy.OAuth1UserHandler(api_key, api_secret, access_token, access_token_secret)
-api = tweepy.API(auth)
+# Create Tweepy client for API v2 with OAuth 1.0a user context
+client = tweepy.Client(
+    consumer_key=api_key,
+    consumer_secret=api_secret,
+    access_token=access_token,
+    access_token_secret=access_token_secret
+)
 
 # Read duas from file
 with open("duas.txt", "r", encoding="utf-8") as f:
@@ -24,6 +28,7 @@ duaa = random.choice(ad3eya)
 today = datetime.now().strftime("%Y-%m-%d")
 tweet = f"{duaa}\n\nليلة {today}"
 
-# Post the dua
-api.update_status(tweet)
-print("✅ تم نشر الدعاء!")
+# Post the dua using API v2
+response = client.create_tweet(text=tweet)
+
+print(f"✅ تم نشر الدعاء! Tweet ID: {response.data['id']}")
