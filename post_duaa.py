@@ -26,7 +26,7 @@ duaa = random.choice(ad3eya)
 
 # Add today's date
 today = datetime.now().strftime("%Y-%m-%d")
-tweet = f"{duaa}\n\nليلة {today}"
+tweet = f"{duaa}\n\nلـ{today}"
 
 # Post the dua using API v2
 response = client.create_tweet(text=tweet)
