@@ -2,7 +2,6 @@ import tweepy
 import random
 from datetime import datetime
 import os
-API Key
 
 
 
