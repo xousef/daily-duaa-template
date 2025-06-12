@@ -24,11 +24,16 @@ with open("duas.txt", "r", encoding="utf-8") as f:
 # Pick a random dua
 duaa = random.choice(ad3eya)
 
-# Add today's date
+# Get today's date
 today = datetime.now().strftime("%Y-%m-%d")
-tweet = f"{duaa}\n\nلـ{today}"
 
-# Post the dua using API v2
+# Visually subtle Arabic footer using a light em dash to de-emphasize it
+footer = "— تم انشاء هذه التغريدة عبر الذكاء الاصطناعي"
+
+# Combine tweet
+tweet = f"{duaa}\n\n{footer}"
+
+# Post the dua
 response = client.create_tweet(text=tweet)
 
 print(f"✅ تم نشر الدعاء! Tweet ID: {response.data['id']}")
