@@ -30,8 +30,19 @@ today = datetime.now().strftime("%Y-%m-%d")
 # Visually subtle Arabic footer using a light em dash to de-emphasize it
 footer = "— ريتويت للاجر"
 
-# Combine tweet
-tweet = f"{duaa}\n\n{footer}"
+# Combine tweet with specified format
+tweet = f"""
+
+َ
+
+          {{{duaa}}} 
+
+َ
+
+{footer}
+"""
+
+
 
 # Post the dua
 response = client.create_tweet(text=tweet)
