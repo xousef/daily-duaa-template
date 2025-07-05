@@ -31,11 +31,12 @@ today = datetime.now().strftime("%Y-%m-%d")
 
 # Combine tweet with specified format
 tweet = f"""
+َ
 
 
 َ
 
-          {{{duaa}}} 
+          {{{duaa}}}
 
 َ
 
