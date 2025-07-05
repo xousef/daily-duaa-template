@@ -28,7 +28,6 @@ duaa = random.choice(ad3eya)
 today = datetime.now().strftime("%Y-%m-%d")
 
 # Visually subtle Arabic footer using a light em dash to de-emphasize it
-footer = "— ريتويت للاجر"
 
 # Combine tweet with specified format
 tweet = f"""
@@ -39,7 +38,7 @@ tweet = f"""
 
 َ
 
-{footer}
+
 """
 
 
