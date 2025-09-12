@@ -1,5 +1,4 @@
 import tweepy
-import random
 from datetime import datetime
 import os
 
@@ -21,30 +20,44 @@ client = tweepy.Client(
 with open("duas.txt", "r", encoding="utf-8") as f:
     ad3eya = [line.strip() for line in f if line.strip()]
 
-# Pick a random dua
-duaa = random.choice(ad3eya)
+# File to track the last tweeted index
+index_file = "last_index.txt"
 
-# Get today's date
-today = datetime.now().strftime("%Y-%m-%d")
+# Load last index, start at -1 if file doesn't exist
+if os.path.exists(index_file):
+    with open(index_file, "r") as f:
+        last_index = int(f.read().strip())
+else:
+    last_index = -1
 
-# Visually subtle Arabic footer using a light em dash to de-emphasize it
+# Get next dua by order
+next_index = last_index + 1
 
-# Combine tweet with specified format
+# Stop if we already tweeted them all
+if next_index >= len(ad3eya):
+    print("🚫 كل الأدعية تم نشرها.")
+    exit()
+
+duaa = ad3eya[next_index]
+
+# Save updated index
+with open(index_file, "w") as f:
+    f.write(str(next_index))
+
+# Format tweet
 tweet = f"""
 َ
 
 
 َ
 
-          {{{duaa}}}
+          {duaa}
 
 َ
 
 """
 
-
-
 # Post the dua
 response = client.create_tweet(text=tweet)
 
-print(f"✅ تم نشر الدعاء! Tweet ID: {response.data['id']}")
+print(f"✅ تم نشر الدعاء! Tweet ID: {response.data['id']} | Index: {next_index}")
