@@ -8,7 +8,7 @@ api_secret = os.environ["API_SECRET"]
 access_token = os.environ["ACCESS_TOKEN"]
 access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
 
-# Create Tweepy client for API v2 with OAuth 1.0a user context
+# Create Tweepy client
 client = tweepy.Client(
     consumer_key=api_key,
     consumer_secret=api_secret,
@@ -20,17 +20,27 @@ client = tweepy.Client(
 with open("duas.txt", "r", encoding="utf-8") as f:
     ad3eya = [line.strip() for line in f if line.strip()]
 
-# File to track the last tweeted index
+# File to track last index + date
 index_file = "last_index.txt"
 
-# Load last index, start at -1 if file doesn't exist
+today = datetime.now().strftime("%Y-%m-%d")
+
+# Default values
+last_index = -1
+last_date = None
+
 if os.path.exists(index_file):
     with open(index_file, "r") as f:
-        last_index = int(f.read().strip())
-else:
-    last_index = -1
+        content = f.read().strip().split(",")
+        if len(content) == 2:
+            last_index = int(content[0])
+            last_date = content[1]
 
-# Get next dua by order
+# Only move to next dua if date changed
+if last_date == today:
+    print("⏸️ Already tweeted today.")
+    exit()
+
 next_index = last_index + 1
 
 # Stop if we already tweeted them all
@@ -40,9 +50,9 @@ if next_index >= len(ad3eya):
 
 duaa = ad3eya[next_index]
 
-# Save updated index
+# Save updated index and today’s date
 with open(index_file, "w") as f:
-    f.write(str(next_index))
+    f.write(f"{next_index},{today}")
 
 # Format tweet
 tweet = f"""
@@ -59,5 +69,4 @@ tweet = f"""
 
 # Post the dua
 response = client.create_tweet(text=tweet)
-
 print(f"✅ تم نشر الدعاء! Tweet ID: {response.data['id']} | Index: {next_index}")
