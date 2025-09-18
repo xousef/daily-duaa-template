@@ -22,13 +22,13 @@ with open("duas.txt", "r", encoding="utf-8") as f:
 
 # File to track last index + date
 index_file = "last_index.txt"
-
 today = datetime.now().strftime("%Y-%m-%d")
 
-# Default values
+# Defaults
 last_index = -1
 last_date = None
 
+# Load progress if file exists
 if os.path.exists(index_file):
     with open(index_file, "r") as f:
         content = f.read().strip().split(",")
@@ -36,23 +36,26 @@ if os.path.exists(index_file):
             last_index = int(content[0])
             last_date = content[1]
 
-# Only move to next dua if date changed
+# Skip if already tweeted today
 if last_date == today:
     print("⏸️ Already tweeted today.")
     exit()
 
+# Get next dua
 next_index = last_index + 1
 
-# Stop if we already tweeted them all
+# Stop if all duas are posted
 if next_index >= len(ad3eya):
     print("🚫 كل الأدعية تم نشرها.")
     exit()
 
 duaa = ad3eya[next_index]
 
-# Save updated index and today’s date
+# Save progress
 with open(index_file, "w") as f:
     f.write(f"{next_index},{today}")
+
+print(f"💾 Progress saved: Index {next_index} on {today}")
 
 # Format tweet
 tweet = f"""
