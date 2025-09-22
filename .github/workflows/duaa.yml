@@ -9,24 +9,20 @@ jobs:
   post-duaa:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout repo
       - uses: actions/checkout@v3
 
+      # Step 2: Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Restore last index cache
-        id: cache
-        uses: actions/cache@v4
-        with:
-          path: last_index.txt
-          key: dua-index-cache
-          restore-keys: dua-index-cache
-
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Step 4: Run your script
       - name: Run script
         env:
           API_KEY: ${{ secrets.API_KEY }}
@@ -35,10 +31,12 @@ jobs:
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
         run: python post_duaa.py
 
-      - name: Save updated last index
-        if: always()
-        uses: actions/cache@v4
-        with:
-          path: last_index.txt
-          key: dua-index-cache
-          restore-keys: dua-index-cache
+      # Step 5: Commit updated last_index.txt back to repo
+      - name: Commit last_index.txt
+        run: |
+          git config --global user.email "bot@example.com"
+          git config --global user.name "Dua Bot"
+          git add last_index.txt
+          git commit -m "Update last_index.txt after tweeting"
+          git push
+        continue-on-error: true
