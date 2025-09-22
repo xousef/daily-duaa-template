@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # Step 4: Run your script
+      # Step 4: Run your Python script
       - name: Run tweet script
         env:
           API_KEY: ${{ secrets.API_KEY }}
@@ -38,11 +38,11 @@ jobs:
             echo "-1,1970-01-01" > last_index.txt
           fi
 
-      # Step 6: Commit updated last_index.txt
+      # Step 6: Commit and push updated last_index.txt using PAT
       - name: Commit last_index.txt
         run: |
           git config --global user.email "bot@example.com"
           git config --global user.name "Dua Bot"
           git add last_index.txt
           git commit -m "Update last_index.txt after tweeting"
-          git push
+          git push https://xousef:${{ secrets.PAT_TOKEN }}@github.com/xousef/daily-duaa-template.git
