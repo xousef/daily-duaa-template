@@ -46,7 +46,7 @@ next_index = last_index + 1
 
 # Stop if all duas are posted
 if next_index >= len(ad3eya):
-    print("🚫 كل الأدعية تم نشرها.")
+    print("🚫 All duas have been tweeted.")
     exit()
 
 duaa = ad3eya[next_index]
@@ -60,16 +60,11 @@ print(f"💾 Progress saved: Index {next_index} on {today}")
 # --- Format tweet ---
 tweet = f"""
 َ
-
-
 َ
-
           {duaa}
-
 َ
-
 """
 
 # --- Post the dua ---
 response = client.create_tweet(text=tweet)
-print(f"✅ تم نشر الدعاء! Tweet ID: {response.data['id']} | Index: {next_index}")
+print(f"✅ Tweet posted! Tweet ID: {response.data['id']} | Index: {next_index}")
