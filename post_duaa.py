@@ -28,13 +28,17 @@ today = datetime.now().strftime("%Y-%m-%d")
 last_index = -1
 last_date = None
 
-# Load progress if file exists
-if os.path.exists(index_file):
-    with open(index_file, "r") as f:
-        content = f.read().strip().split(",")
-        if len(content) == 2:
-            last_index = int(content[0])
-            last_date = content[1]
+# Ensure the index file exists
+if not os.path.exists(index_file):
+    with open(index_file, "w", encoding="utf-8") as f:
+        f.write("-1,1970-01-01")  # initial values
+
+# Load progress
+with open(index_file, "r", encoding="utf-8") as f:
+    content = f.read().strip().split(",")
+    if len(content) == 2:
+        last_index = int(content[0])
+        last_date = content[1]
 
 # Skip if already tweeted today
 if last_date == today:
@@ -44,15 +48,14 @@ if last_date == today:
 # Get next dua
 next_index = last_index + 1
 
-# Stop if all duas are posted
+# Wrap around if all duas are tweeted
 if next_index >= len(ad3eya):
-    print("🚫 All duas have been tweeted.")
-    exit()
+    next_index = 0  # start from beginning
 
 duaa = ad3eya[next_index]
 
 # Save progress
-with open(index_file, "w") as f:
+with open(index_file, "w", encoding="utf-8") as f:
     f.write(f"{next_index},{today}")
 
 print(f"💾 Progress saved: Index {next_index} on {today}")
