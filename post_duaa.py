@@ -1,6 +1,7 @@
 import tweepy
 from datetime import datetime
 import os
+import random
 
 # --- API credentials from GitHub Secrets ---
 api_key = os.environ["API_KEY"]
@@ -20,45 +21,14 @@ client = tweepy.Client(
 with open("duas.txt", "r", encoding="utf-8") as f:
     ad3eya = [line.strip() for line in f if line.strip()]
 
-# --- File to track last index + date ---
-index_file = "last_index.txt"
+# --- Use date as random seed ---
 today = datetime.now().strftime("%Y-%m-%d")
+random.seed(today)  # same shuffle for the same day
 
-# Defaults
-last_index = -1
-last_date = None
-
-# Ensure the index file exists
-if not os.path.exists(index_file):
-    with open(index_file, "w", encoding="utf-8") as f:
-        f.write("-1,1970-01-01")  # initial values
-
-# Load progress
-with open(index_file, "r", encoding="utf-8") as f:
-    content = f.read().strip().split(",")
-    if len(content) == 2:
-        last_index = int(content[0])
-        last_date = content[1]
-
-# Skip if already tweeted today
-if last_date == today:
-    print("⏸️ Already tweeted today. Index:", last_index)
-    exit()
-
-# Get next dua
-next_index = last_index + 1
-
-# Wrap around if all duas are tweeted
-if next_index >= len(ad3eya):
-    next_index = 0  # start from beginning
-
-duaa = ad3eya[next_index]
-
-# Save progress
-with open(index_file, "w", encoding="utf-8") as f:
-    f.write(f"{next_index},{today}")
-
-print(f"💾 Progress saved: Index {next_index} on {today}")
+# Shuffle and pick first dua
+shuffled = ad3eya[:]
+random.shuffle(shuffled)
+duaa = shuffled[0]
 
 # --- Format tweet ---
 tweet = f"""
@@ -70,4 +40,4 @@ tweet = f"""
 
 # --- Post the dua ---
 response = client.create_tweet(text=tweet)
-print(f"✅ Tweet posted! Tweet ID: {response.data['id']} | Index: {next_index}")
+print(f"✅ Tweet posted! Tweet ID: {response.data['id']} | Date: {today}")
