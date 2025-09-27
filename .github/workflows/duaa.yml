@@ -20,7 +20,8 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       # Step 4: Run your Python script
       - name: Run tweet script
@@ -30,19 +31,3 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
         run: python post_duaa.py
-
-      # Step 5: Ensure last_index.txt exists (first run)
-      - name: Ensure last_index.txt exists
-        run: |
-          if [ ! -f last_index.txt ]; then
-            echo "-1,1970-01-01" > last_index.txt
-          fi
-
-      # Step 6: Commit and push updated last_index.txt using PAT
-      - name: Commit last_index.txt
-        run: |
-          git config --global user.email "bot@example.com"
-          git config --global user.name "Dua Bot"
-          git add last_index.txt
-          git commit -m "Update last_index.txt after tweeting"
-          git push https://xousef:${{ secrets.PAT_TOKEN }}@github.com/xousef/daily-duaa-template.git
